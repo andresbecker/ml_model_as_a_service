@@ -1,0 +1,185 @@
+openapi: 3.0.1
+
+info:
+  title: Inference Job API
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost:8080/api/v1/inference
+    description: Inferred Url
+
+tags:
+  - name: inference-job-api
+    description: Inference Job API
+
+paths:
+  /jobs:
+    get:
+      tags:
+      - inference-job-api
+      summary: List all inference jobs
+      operationId: app.list_inference_jobs
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+    post:
+      tags:
+      - inference-job-api
+      summary: Create an inference job
+      operationId: app.create_inference_job
+      description: Creates a new inference job, stores the metadata and returns the reference. Externally supplied ids are ignored.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Job'
+        required: true
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
+  /jobs/{id}:
+    get:
+      tags:
+      - inference-job-api
+      summary: Get a single inference job
+      operationId: app.get_inference_job
+      parameters:
+      - name: id
+        in: path
+        description: Inference job id
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        404:
+          description:  Inference job could not be found
+          content: {}
+    
+    delete:
+      tags:
+      - inference-job-api
+      summary: Delete a single inference job
+      operationId: app.delete_inference_job
+      parameters:
+      - name: id
+        in: path
+        description: Inference job id
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: No Content
+        404:
+          description:  Inference job could not be found
+          content: {}
+
+    post:
+      tags:
+      - inference-job-api
+      summary: Execute a single inference job
+      operationId: app.execute_inference_job
+      parameters:
+      - name: id
+        in: path
+        description: Inference job id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          'image/jpeg':
+            schema:
+              type: string
+              format: binary
+          'image/png':
+            schema:
+              type: string
+              format: binary   
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        404:
+          description:  Inference job could not be found
+          content: {}
+
+  /jobs/{id}/result:
+    get:
+      tags:
+      - inference-job-api
+      summary: Get a single inference job result
+      operationId: app.get_inference_job_result
+      parameters:
+      - name: id
+        in: path
+        description: Inference job id
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResult'
+        404:
+          description:  Inference job could not be found
+          content: {}
+
+  
+components:
+  schemas:
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - NEW
+          - RUNNING
+          - CANCELLED
+          - DONE
+        type:
+          type: string
+          enum:
+          - CLASSIFICATION
+          - OBJECT_DETECTION
+        
+    JobResult:
+      type: object
+      properties:
+        jobId:
+          type: string
+        result:
+          type: string
+        type:
+          type: string
+          enum:
+          - CLASSIFICATION
+          - OBJECT_DETECTION

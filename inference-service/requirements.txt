@@ -1,0 +1,4 @@
+gunicorn
+pymongo
+kafka-python
+connexion[swagger-ui]

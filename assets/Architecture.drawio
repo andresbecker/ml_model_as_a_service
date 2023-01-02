@@ -1,0 +1,58 @@
+<mxfile host="65bd71144e">
+    <diagram id="WJWYRF3JW887FxR_2pt_" name="Components">
+        <mxGraphModel dx="798" dy="1706" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="JROARpgO5LGKM70FcoCZ-3" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="80" width="780" height="470" as="geometry"/>
+                </mxCell>
+                <mxCell id="NP-N_gkXr4D6js98mMwR-6" value="Port 9092" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="NP-N_gkXr4D6js98mMwR-9" target="NP-N_gkXr4D6js98mMwR-5" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="270" y="330"/>
+                            <mxPoint x="500" y="330"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="AEiUr5kMtKLyq08qgJaA-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=52.5;entryPerimeter=0;" parent="1" source="NP-N_gkXr4D6js98mMwR-1" target="AEiUr5kMtKLyq08qgJaA-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="AEiUr5kMtKLyq08qgJaA-12" value="Port 27017" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AEiUr5kMtKLyq08qgJaA-11" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1706" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NP-N_gkXr4D6js98mMwR-1" value="Inference Service" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="110" y="110" width="200" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="NP-N_gkXr4D6js98mMwR-5" value="Kafka / Zookeeper" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="240" width="240" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="NP-N_gkXr4D6js98mMwR-8" value="Port 8080" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="NP-N_gkXr4D6js98mMwR-7" target="NP-N_gkXr4D6js98mMwR-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JROARpgO5LGKM70FcoCZ-1" value="Port 9093 (Listener for out of Docker)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="NP-N_gkXr4D6js98mMwR-7" target="NP-N_gkXr4D6js98mMwR-5" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="150" y="-20" as="sourcePoint"/>
+                        <mxPoint x="435" y="420" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="410" y="-40"/>
+                            <mxPoint x="410" y="140"/>
+                            <mxPoint x="620" y="140"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NP-N_gkXr4D6js98mMwR-7" value="REST Client (Open API 3.0)" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="-70" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="NP-N_gkXr4D6js98mMwR-9" value="Cloud Event" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="240" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="AEiUr5kMtKLyq08qgJaA-7" value="Mongo DB" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
+                    <mxGeometry x="355" y="440" width="110" height="80" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
