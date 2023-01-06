@@ -13,8 +13,9 @@ RUN pip install -r requirements.txt
 FROM python:3.10-slim
 WORKDIR /usr/app
 COPY --from=build /usr/app/venv ./venv
-COPY app/ .
+#COPY app/ .
+RUN mkdir ./logs
 
 ENV PATH="/usr/app/venv/bin:$PATH"
 
-CMD [ "gunicorn", "--bind", "0.0.0.0:8080", "app:app" ]
+CMD [ "gunicorn", "--bind", "0.0.0.0:8080", "--reload", "app:app" ]
