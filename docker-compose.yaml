@@ -48,4 +48,8 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_healthy
+    volumes:
+      - /home/hhughes/Documents/Documents/Projects/CeloAi_coding_challenge/ml_infra/inference-service/app/app.py:/usr/app/app.py
+      - /home/hhughes/Documents/Documents/Projects/CeloAi_coding_challenge/ml_infra/inference-service/app/openapi.yml:/usr/app/openapi.yml
+      - /home/hhughes/Documents/Documents/Projects/CeloAi_coding_challenge/ml_infra/logs/:/usr/app/logs
 
