@@ -18,4 +18,4 @@ RUN mkdir ./logs
 
 ENV PATH="/usr/app/venv/bin:$PATH"
 
-CMD [ "gunicorn", "--bind", "0.0.0.0:8080", "--reload", "app:app" ]
+CMD [ "gunicorn", "--bind", "0.0.0.0:8080", "--log-file", "./logs/gunicorn.log", "--reload", "app:app" ]
