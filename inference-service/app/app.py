@@ -7,14 +7,6 @@ import kafka
 from datetime import datetime as dt
 import sys
 
-class KafkaHandler(logging.Handler):
-    """
-    This logging.Handler sub-class allows the logging instance to send logs to kafka
-    """
-    def emit(self, record):
-        producer.send(kafka_topic, self.format(record))
-        producer.flush()
-
 def _create_kafka_event(request_rc=200, job_id='null'):
     """
     Create an event on kafka that complies with the CloudEvents 1.0 specification.
@@ -47,10 +39,9 @@ def _create_kafka_event(request_rc=200, job_id='null'):
         'specversion' : "1.0",
         'time': dt.now().strftime("%Y-%m-%d %H:%M:%S")
         }
-    
-    event.update(op_info)
 
-    logger.info('%s', event)
+    producer.send(kafka_topic, bytes(str({**event, **op_info}), 'utf-8'))
+    producer.flush()
 
 
 def _find_job(id: str):
@@ -70,8 +61,6 @@ def _find_job(id: str):
     return job
 
 def list_inference_jobs():
-
-    #logger.debug("Inference jobs listed")
 
     # Retrieve all documents from the jobs collection
     # TODO: do something to avoid dumping the whole collection without affecting the functionality
@@ -158,35 +147,29 @@ def get_inference_job_result():
     pass
 
 # Set kafka producer client
-producer = kafka.KafkaProducer(
-    bootstrap_servers=['kafka:9092'], 
-    value_serializer=lambda v: v.encode('utf-8'))
+producer = kafka.KafkaProducer(bootstrap_servers=['kafka:9092'])
 # Set kafka topic name
 kafka_topic = 'infer_serv'
+#producer.send(kafka_topic, b"Hello, Kafka!")
+#producer.flush()
 
-# Set logger to log into Kafka
+
+# Set logger to log into disk file
 # Create a logger
 logger = logging.getLogger(kafka_topic + '_api')
 # Set the logging level
 logger.setLevel(logging.DEBUG)
-# Set custom Kafka logging handler
-handler = KafkaHandler()
+# Set logger handler
+handler = logging.FileHandler("./logs/celo_chl.log")
 # Set the logging format
-#formatter = logging.Formatter('%(asctime)s: %(name)s: %(levelname)s: %(message)s','%Y-%m-%d %H:%M:%S')
-#handler.setFormatter(formatter)
-# Add the handler to the logger
-logger.addHandler(handler)
-
-# Set logger to log into disk file
-# Create a logger
-#handler = logging.FileHandler("./logs/celo_chl.log")
-# Set the logging format
-#handler.setFormatter(formatter)
+formatter = logging.Formatter('%(asctime)s: %(name)s: %(levelname)s: %(message)s','%Y-%m-%d %H:%M:%S')
+handler.setFormatter(formatter)
 # Add handler to logger
-#logger.addHandler(KafkaLogHandler())
+logger.addHandler(handler)
 
 # Log a message
 # logger.[debug,info,warning,error,critical]("This is a message")
+# logger.debug("This is a message")
 
 mongo_client = pymongo.MongoClient("mongodb://mongodb:27017/")
 db = mongo_client["inference"]
