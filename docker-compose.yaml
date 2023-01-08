@@ -49,7 +49,19 @@ services:
       mongodb:
         condition: service_healthy
     volumes:
-      - /home/hhughes/Documents/Documents/Projects/CeloAi_coding_challenge/ml_infra/inference-service/app/app.py:/usr/app/app.py
-      - /home/hhughes/Documents/Documents/Projects/CeloAi_coding_challenge/ml_infra/inference-service/app/openapi.yml:/usr/app/openapi.yml
-      - /home/hhughes/Documents/Documents/Projects/CeloAi_coding_challenge/ml_infra/logs/:/usr/app/logs
+      - ./inference-service/app/app.py:/usr/app/app.py
+      - ./inference-service/app/openapi.yml:/usr/app/openapi.yml
+      - ./logs/:/usr/app/logs
 
+  exec_infer_jobs:
+    image: tensorflow/serving:latest
+    ports:
+      - '8501:8501'
+    depends_on:
+      - inference
+    command: ['--model_config_file=/tmp/models.config']
+    environment:
+      - MODEL_BASE_PATH=/opt/celonis_ml_challenge/inference_models/saved_models
+    volumes:
+      - ./:/opt/celonis_ml_challenge
+      - ./inference_models/saved_models/models.config:/tmp/models.config
