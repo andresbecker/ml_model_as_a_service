@@ -1,0 +1,12 @@
+jupyterlab
+ipywidgets
+tensorflow
+tensorflow-hub
+tensorflow-addons
+tensorflow-datasets
+numpy
+pandas
+matplotlib
+requests
+Pillow
+pymongo
