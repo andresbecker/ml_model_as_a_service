@@ -130,3 +130,6 @@ dmypy.json
 
 ### VS Code ###
 .vscode/
+
+# Seved TF models
+inference_models/saved_models
