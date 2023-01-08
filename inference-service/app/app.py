@@ -6,8 +6,9 @@ import yaml
 import kafka
 from datetime import datetime as dt
 import sys
+import json
 
-def _create_kafka_event(request_rc=200, job_id='null'):
+def _create_kafka_event(request_rc=200, job_id='null', img='null'):
     """
     Create an event on kafka that complies with the CloudEvents 1.0 specification.
     This function collects information about the function corresponding to an 
@@ -19,28 +20,30 @@ def _create_kafka_event(request_rc=200, job_id='null'):
         job_id: str, job id if applicable, otherwise 'null'
     output: None 
     """
-    op_name = 'app.' + sys._getframe(1).f_code.co_name
+    op_name = "app." + sys._getframe(1).f_code.co_name
 
     op_info = None
     for path in api_def['paths'].keys():
         for r_meth in api_def['paths'][path].keys():
             if op_name == api_def['paths'][path][r_meth]['operationId']:
                 op_info = {
-                    'operationId': op_name, 
-                    'path': path, 
-                    'request_method': r_meth, 
-                    'request_rc': request_rc,
-                    'job_id': job_id}
+                    "operationId": op_name, 
+                    "path": path, 
+                    "request_method": r_meth, 
+                    "request_rc": str(request_rc),
+                    "job_id": job_id,
+                    "img": img}
 
     if op_info is None:
         raise Exception(f'operationId not {op_name} found in the OpenAPI definition!')
 
     event = {
-        'specversion' : "1.0",
-        'time': dt.now().strftime("%Y-%m-%d %H:%M:%S")
+        "specversion" : "1.0",
+        "time": dt.now().strftime("%Y-%m-%d %H:%M:%S")
         }
 
-    producer.send(kafka_topic, bytes(str({**event, **op_info}), 'utf-8'))
+    #producer.send(kafka_topic, bytes(str({**event, **op_info}), 'utf-8'))
+    producer.send(kafka_topic, json.dumps({**event, **op_info}))
     producer.flush()
 
 
@@ -140,14 +143,55 @@ def delete_inference_job(id: str):
 
     return '', 204
     
-def execute_inference_job():
-    pass
+def execute_inference_job(id: str):
+
+    # Look for job
+    job = _find_job(id)
+
+    # Return 404 if job could not be found
+    if job is None:
+        # Create kafka event
+        return {}, 404
+
+    # Add/rename job id
+    job['id'] = str(job['_id'])
+
+    # Load image sended on the payload
+    req_json = connexion.request.json
+    if 'image/jpeg' in req_json.keys() and 'image/png' in req_json.keys():
+        err_msg = "Inference job execution failed, jpeg and png images provided! please specify only one"
+        logger.error(err_msg)
+        return {"error": err_msg}, 500
+
+    elif 'image/jpeg' in req_json.keys():
+        img = req_json['image/jpeg']
+
+    elif 'image/png' in req_json.keys():
+        img = req_json['image/png']
+
+    else:
+        err_msg = "Inference job execution failed, jpeg or png image not provided!"
+        logger.error(err_msg)
+        return {"error": err_msg}, 500
+
+    # Create kafka event
+    _create_kafka_event(200, id, img)
+
+    # Return only the properties defined on the api job schema
+    return  {key: job[key] for key in job_prop.keys() if key in job.keys()}, 200
 
 def get_inference_job_result():
     pass
 
 # Set kafka producer client
-producer = kafka.KafkaProducer(bootstrap_servers=['kafka:9092'])
+#producer = kafka.KafkaProducer(bootstrap_servers=['kafka:9092'])
+
+producer = kafka.KafkaProducer(
+    bootstrap_servers=['kafka:9092'], 
+    value_serializer=lambda m: bytes(m, 'utf-8'))
+
+#bytes(json.dumps({**event, **op_info}), 'utf-8')
+
 # Set kafka topic name
 kafka_topic = 'infer_serv'
 #producer.send(kafka_topic, b"Hello, Kafka!")
