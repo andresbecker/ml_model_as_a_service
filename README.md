@@ -10,8 +10,8 @@ sudo usermod -aG docker $USER
 Create a local environment for development and testing
 ```sh
 python3 -m pip install virtualenv
-python3 -m venv ~/.venv/celo
-source ~/.venv/celo/bin/activate
+python3 -m venv ~/.venv/mlops
+source ~/.venv/mlops/bin/activate
 python3 -m pip install gunicorn pymongo kafka-python connexion[swagger-ui]
 
 # Start web-server
