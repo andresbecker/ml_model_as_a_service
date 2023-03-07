@@ -71,6 +71,9 @@ paths:
         404:
           description:  Inference job could not be found
           content: {}
+        500:
+          description:  Inference job could not be updated
+          content: {}
     
     delete:
       tags:
@@ -112,7 +115,8 @@ paths:
           'image/png':
             schema:
               type: string
-              format: binary   
+              format: binary
+        required: true
       responses:
         200:
           description: OK
@@ -120,6 +124,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Job'
+        404:
+          description:  Inference job could not be found
+          content: {}
+    put:
+      tags:
+      - inference-job-api
+      summary: Update a single inference job
+      operationId: app.update_inference_job
+      parameters:
+      - name: id
+        in: path
+        description: Inference job id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Job'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobUpdate'
         404:
           description:  Inference job could not be found
           content: {}
@@ -170,7 +202,18 @@ components:
           enum:
           - CLASSIFICATION
           - OBJECT_DETECTION
-        
+
+    JobUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - CLASSIFICATION
+          - OBJECT_DETECTION
+
     JobResult:
       type: object
       properties:
