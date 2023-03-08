@@ -40,3 +40,4 @@ docker-compose logs
 * Implement security on the Databases! everybody can write and read from them!
 * Apparently the response validation in connection does not work as expected (https://connexion.readthedocs.io/en/latest/response.html)
 * Init collection to avoid errors if you try to retrieve a job with id and the collection does not exist
+* Update diagram
