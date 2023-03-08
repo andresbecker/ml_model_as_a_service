@@ -33,8 +33,6 @@ docker-compose logs
 
 
 
-
-
 # TODOs
 * Validate that jobs are unique under name, status and type
 * Make MongoDB and Kafka container restart persistent
